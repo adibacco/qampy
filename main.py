@@ -1,10 +1,18 @@
 import numpy as np
-import matplotlib.pyplot as plt
 from scipy import signal
 
-num_symbols = 1000
+plot = False
+if plot:
+    import matplotlib.pyplot as plt
+
+
+outputfile = 'qam.bin'
+
+num_symbols = 2000
 F_baud = 30720000 
 F_sample = 491520000
+N_pts = 30720
+Amp = 32604
 
 sps = F_sample // F_baud # samples per symbol
 
@@ -30,26 +38,54 @@ Ts = 1/F_baud # Assume sample rate is 1 Hz, so sample period is 1, so *symbol* p
 t = np.arange(-51/F_sample, 52/F_sample, 1/F_sample) # remember it's not inclusive of final number
 
 h = np.sinc(t/Ts) * np.cos(np.pi*beta*t/Ts) / (1 - (2*beta*t/Ts)**2)
-plt.figure(1)
-plt.plot(t, h, '.')
-plt.grid(True)
-plt.show()
+#plt.figure(1)
+#plt.plot(t, h, '.')
+#plt.grid(True)
+#plt.show()
 
 
 # Filter our signal, in order to apply the pulse shaping
 I_shaped = np.convolve(I, h)
-plt.figure(2)
-plt.plot(I_shaped, '.-')
+
+if plot:
+    plt.figure(2)
+    plt.plot(I_shaped, '.-')
+
+"""
 for i in range(num_symbols):
-    plt.plot([i*sps+num_taps//2+1,i*sps+num_taps//2+1], [min(I_shaped), max(I_shaped)])
+    x = [i*sps+num_taps//2+1,i*sps+num_taps//2+1]
+    y = [min(I_shaped), max(I_shaped)]
+    plt.plot(x, y)
+"""
 
 Q_shaped = np.convolve(Q, h)
-plt.figure(2)
-plt.plot(Q_shaped, '.-')
+
+if plot:
+    plt.figure(2)
+    plt.plot(Q_shaped, '.-')
+
+"""
 for i in range(num_symbols):
+    #I_tot += [i*sps+num_taps//2+1,i*sps+num_taps//2+1]
     plt.plot([i*sps+num_taps//2+1,i*sps+num_taps//2+1], [min(Q_shaped), max(Q_shaped)])
-plt.grid(True)
-plt.show()
+"""
+
+if plot:
+    plt.grid(True)
+    plt.show()
+
+
+i = I_shaped[0:N_pts]
+q = Q_shaped[0:N_pts]
+amp_max = max(max(i), max(q))
+
+i = i * (Amp/amp_max)
+q = q * (Amp/amp_max)
+
+iq = np.vstack((i, q)).ravel('F')
+
+dt = np.dtype('<i2')  
+iq.astype(dtype=dt).tofile(outputfile)
 
 
 """ S = np.fft.fftshift(np.fft.fft(I_shaped))
