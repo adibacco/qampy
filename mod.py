@@ -1,7 +1,7 @@
 import numpy as np
 from scipy import signal
 
-plot = False
+plot = True
 if plot:
     import matplotlib.pyplot as plt
 
@@ -38,10 +38,10 @@ Ts = 1/F_baud # Assume sample rate is 1 Hz, so sample period is 1, so *symbol* p
 t = np.arange(-51/F_sample, 52/F_sample, 1/F_sample) # remember it's not inclusive of final number
 
 h = np.sinc(t/Ts) * np.cos(np.pi*beta*t/Ts) / (1 - (2*beta*t/Ts)**2)
-#plt.figure(1)
-#plt.plot(t, h, '.')
-#plt.grid(True)
-#plt.show()
+plt.figure(1)
+plt.plot(t, h, '.')
+plt.grid(True)
+plt.show()
 
 
 # Filter our signal, in order to apply the pulse shaping
@@ -51,12 +51,11 @@ if plot:
     plt.figure(2)
     plt.plot(I_shaped, '.-')
 
-"""
 for i in range(num_symbols):
     x = [i*sps+num_taps//2+1,i*sps+num_taps//2+1]
     y = [min(I_shaped), max(I_shaped)]
     plt.plot(x, y)
-"""
+
 
 Q_shaped = np.convolve(Q, h)
 
