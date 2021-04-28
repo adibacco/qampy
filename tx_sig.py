@@ -5,6 +5,9 @@ WAVEFORM=sys.argv[1]
 TARGET_ADDR_DDR=0x2380000000
 VSPA_BUFFER_ADDR=0x40000000
 
+OFFSET_TX_SECTION = 0
+OFFSET_CH=0x40000
+
 DCS=sys.argv[2]
 ANTENNA_PORT=sys.argv[3]
 
@@ -26,7 +29,7 @@ run_process(b2m)
 toks = sys.argv[1].split('-')
 
 
-cmd = 'python3 /home/root/l1t-lite/vspa-if-ls'+str(DCS) + '.py cfg buff tx 0 ' + hex(VSPA_BUFFER_ADDR) + ' ' + str(toks[1]) + ' ' + str(toks[2]) + ' ' + str(ANTENNA_PORT)
+cmd = 'python3 /home/root/l1t-lite/vspa-if-ls'+str(DCS) + '.py cfg buff tx 0 ' + hex(VSPA_BUFFER_ADDR + ANTENNA_PORT*OFFSET_CH + OFFSET_TX_SECTION) + ' ' + str(toks[1]) + ' ' + str(toks[2]) + ' ' + str(ANTENNA_PORT)
 print(cmd)
 run_process(cmd)
 
