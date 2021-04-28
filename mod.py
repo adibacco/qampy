@@ -119,9 +119,9 @@ if plot:
 iq = np.vstack((i, q)).ravel('F')
 
 dt = np.dtype('<i2')  
-fname = outputfile+'@'+str(blen*4)+'@'+str(tlen*4)+'@.bin'
+fname = outputfile+'-'+str(blen*4)+'-'+str(tlen*4)+'-.bin'
 iq.astype(dtype=dt).tofile(fname)
-toks = fname.split('@')
+toks = fname.split('-')
 print(toks)
 
 
