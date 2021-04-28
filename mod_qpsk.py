@@ -1,4 +1,5 @@
 import numpy as np
+import sys
 from scipy import signal
 
 plot = True
@@ -17,8 +18,8 @@ def replicate(max_len, i, q):
 
 
 def trim_signal(max_samples, i, q):
-    i = i[101::]
-    q = q[101::]
+    i = i[99::]
+    q = q[99::]
 
     idx = max_samples-1
     while ((np.abs(i[idx] - i[0]) > 0.5) or (np.abs(q[idx] - q[0]) > 0.5) ): 
@@ -31,7 +32,7 @@ def trim_signal(max_samples, i, q):
     return [i, q]
 
 
-outputfile = 'tx_qpsk_30mbd_seq_0213_trim'
+outputfile = 'tx_qpsk_30mbd_seq_'
 
 num_symbols = 1000
 F_baud = 30720000 
@@ -45,7 +46,9 @@ syms_qpsk = np.array([ 1. + 1.j, -1. + 1.j, -1. - 1.j, 1. - 1.j ])
 #bits = np.random.randint(0, 4, num_symbols) # Our data to be transmitted, 1's and 0's
 bits = np.zeros(num_symbols, dtype=int)
 
-seq = [0, 2, 1, 3]
+seq = np.zeros(4, dtype=int)
+for i in range(4):
+    seq[i] = int(sys.argv[i+1])
 
 for k  in range(num_symbols):
     bits[k] = seq[k % 4]
@@ -113,13 +116,13 @@ if plot:
     plt.plot(i)
     plt.plot(q)
     plt.show()
-    plt.plot(i[46::16], q[46::16], '.')
+    plt.plot(i[::sps], q[::sps], '.')
     plt.show()
 
 iq = np.vstack((i, q)).ravel('F')
 
 dt = np.dtype('<i2')  
-fname = outputfile+'-'+str(blen*4)+'-'+str(tlen*4)+'-.bin'
+fname = outputfile+ str(seq[0])+str(seq[1])+str(seq[2])+str(seq[3])+'-'+str(blen*4)+'-'+str(tlen*4)+'-.bin'
 iq.astype(dtype=dt).tofile(fname)
 toks = fname.split('-')
 print(toks)

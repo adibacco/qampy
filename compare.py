@@ -7,17 +7,19 @@ if plot:
     import matplotlib.pyplot as plt
 
 
-infiletx= 'tx_qpsk_30mbd_seq_0213.bin'
+infiletx= 'tx_qpsk_30mbd_seq_0213-16128-112896-.bin'
 
 iqt = np.fromfile(infiletx, dtype = np.dtype('<i2'))
 
-iqt = iqt / 2
-signal.resample_poly(iqt, 1, 2)
 
-it = iqt[::2]/4
-qt = iqt[1::2]/4
+it = iqt[::2]/2
+qt = iqt[1::2]/2
 
-infilerx= 'rx_qpsk_30mbd_seq_0213.bin'
+it = signal.resample_poly(it, 1, 2)
+qt = signal.resample_poly(qt, 1, 2)
+
+
+infilerx= 'rx_qpsk_30mbd_seq_0213-16128-112896-.bin'
 
 iqr = np.fromfile(infilerx, dtype = np.dtype('<i2'))
 
