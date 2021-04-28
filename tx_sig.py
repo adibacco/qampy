@@ -9,7 +9,7 @@ OFFSET_TX_SECTION = 0
 OFFSET_CH=0x40000
 
 DCS=sys.argv[2]
-ANTENNA_PORT=sys.argv[3]
+ANTENNA_PORT=int(sys.argv[3])
 
 def run_process(args):
     os.system(args)
@@ -22,7 +22,7 @@ print('Antenna port ' + str(ANTENNA_PORT))
 print('DCS ' + str(DCS))
 
 
-b2m = '/home/root/l1t-lite/bin2mem -f ' + WAVEFORM + ' -a ' + hex(TARGET_ADDR_DDR) + ' -c 4'
+b2m = '/home/root/l1t-lite/bin2mem -f ' + WAVEFORM + ' -a ' + hex(TARGET_ADDR_DDR + ANTENNA_PORT*OFFSET_CH + OFFSET_TX_SECTION) + ' -c 4'
 print(b2m)
 run_process(b2m)
 
