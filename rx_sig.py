@@ -44,7 +44,7 @@ cmd = 'python3 /home/root/l1t-lite/vspa-if-ls'+str(DCS) + '.py stop rx ' + str(A
 print(cmd)
 run_process(cmd)
 
-m2f = '/home/root/l1t-lite//bin2mem -f ' + WAVEFORM + ' -a ' + hex(TARGET_ADDR_DDR + ANTENNA_PORT*OFFSET_RX + DCS*OFFSET_DCS) + ' -c 4 -r ' + str(TRANSFER)
+m2f = '/home/root/l1t-lite//bin2mem -f ' + WAVEFORM + ' -a ' + hex(TARGET_ADDR_DDR + ANTENNA_PORT*OFFSET_CH + OFFSET_RX_SECTION) + ' -c 4 -r ' + str(TRANSFER)
 print(m2f)
 run_process(m2f)
 
