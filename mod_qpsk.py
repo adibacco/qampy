@@ -2,7 +2,7 @@ import numpy as np
 import sys
 from scipy import signal
 
-plot = True
+plot = False
 if plot:
     import matplotlib.pyplot as plt
 
