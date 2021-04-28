@@ -6,18 +6,49 @@ if plot:
     import matplotlib.pyplot as plt
 
 
-outputfile = 'qam.bin'
+def replicate(max_len, i, q):
 
-num_symbols = 2000
+    blen = len(i)*2*2
+
+    i = np.tile(i, max_len // blen)
+    q = np.tile(q, max_len // blen)
+
+    return [i, q]
+
+
+def trim_signal(max_samples, i, q):
+    i = i[101::]
+    q = q[101::]
+
+    idx = max_samples-1
+    while ((np.abs(i[idx] - i[0]) > 0.5) or (np.abs(q[idx] - q[0]) > 0.5) ): 
+        idx = idx - 1
+
+
+    i = i[0:idx:]
+    q = q[0:idx:]
+
+    return [i, q]
+
+
+outputfile = 'tx_qpsk_30mbd_seq_0213_trim'
+
+num_symbols = 1000
 F_baud = 30720000 
 F_sample = 491520000
 N_pts = 30720
-Amp = 32604
+Amp = 30000
 
 sps = F_sample // F_baud # samples per symbol
 
 syms_qpsk = np.array([ 1. + 1.j, -1. + 1.j, -1. - 1.j, 1. - 1.j ])
-bits = np.random.randint(0, 4, num_symbols) # Our data to be transmitted, 1's and 0's
+#bits = np.random.randint(0, 4, num_symbols) # Our data to be transmitted, 1's and 0's
+bits = np.zeros(num_symbols, dtype=int)
+
+seq = [0, 2, 1, 3]
+
+for k  in range(num_symbols):
+    bits[k] = seq[k % 4]
 
 I = np.array([])
 Q = np.array([])
@@ -38,30 +69,24 @@ Ts = 1/F_baud # Assume sample rate is 1 Hz, so sample period is 1, so *symbol* p
 t = np.arange(-51/F_sample, 52/F_sample, 1/F_sample) # remember it's not inclusive of final number
 
 h = np.sinc(t/Ts) * np.cos(np.pi*beta*t/Ts) / (1 - (2*beta*t/Ts)**2)
-plt.figure(1)
-plt.plot(t, h, '.')
-plt.grid(True)
-plt.show()
+
 
 
 # Filter our signal, in order to apply the pulse shaping
 I_shaped = np.convolve(I, h)
 
-if plot:
-    plt.figure(2)
-    plt.plot(I_shaped, '.-')
 
+"""
 for i in range(num_symbols):
     x = [i*sps+num_taps//2+1,i*sps+num_taps//2+1]
     y = [min(I_shaped), max(I_shaped)]
     plt.plot(x, y)
+"""
 
 
 Q_shaped = np.convolve(Q, h)
 
-if plot:
-    plt.figure(2)
-    plt.plot(Q_shaped, '.-')
+
 
 """
 for i in range(num_symbols):
@@ -69,9 +94,7 @@ for i in range(num_symbols):
     plt.plot([i*sps+num_taps//2+1,i*sps+num_taps//2+1], [min(Q_shaped), max(Q_shaped)])
 """
 
-if plot:
-    plt.grid(True)
-    plt.show()
+
 
 
 i = I_shaped[0:N_pts]
@@ -81,19 +104,36 @@ amp_max = max(max(i), max(q))
 i = i * (Amp/amp_max)
 q = q * (Amp/amp_max)
 
+[i, q] = trim_signal(4096, i, q)
+blen = len(i)
+[i, q] = replicate(122880, i, q)
+tlen = len(i)
+
+if plot:
+    plt.plot(i)
+    plt.plot(q)
+    plt.show()
+    plt.plot(i[46::16], q[46::16], '.')
+    plt.show()
+
 iq = np.vstack((i, q)).ravel('F')
 
 dt = np.dtype('<i2')  
-iq.astype(dtype=dt).tofile(outputfile)
+fname = outputfile+'@'+str(blen*4)+'@'+str(tlen*4)+'@.bin'
+iq.astype(dtype=dt).tofile(fname)
+toks = fname.split('@')
+print(toks)
 
 
-""" S = np.fft.fftshift(np.fft.fft(I_shaped))
+"""
+S = np.fft.fftshift(np.fft.fft(I_shaped))
 S_mag = np.abs(S)
 S_phase = np.angle(S)
 plt.figure(2)
 plt.plot(S_mag)
 plt.grid(True)
-plt.show() """
+plt.show() 
+"""
 
 
 
