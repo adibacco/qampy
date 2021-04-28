@@ -7,7 +7,7 @@ VSPA_BUFFER_ADDR=0x40000000
 DCS=sys.argv[2]
 ANTENNA_PORT=sys.argv[3]
 
-def run_py_process(args):
+def run_process(args):
     os.system(args)
 
 
@@ -20,29 +20,29 @@ print('DCS ' + str(DCS))
 
 b2m = '/home/root/l1t-lite/bin2mem -f ' + sys.argv[1] + ' -a ' + hex(TARGET_ADDR_DDR) + ' -c 4'
 print(b2m)
-run_py_process(b2m)
+run_process(b2m)
 
 toks = sys.argv[1].split('@')
 
 
 cmd = 'python3 /home/root/l1t-lite/vspa-if-ls'+str(DCS) + '.py cfg buff tx 0 ' + hex(VSPA_BUFFER_ADDR) + ' ' + str(toks[1]) + ' ' + str(toks[2]) + ' ' + str(ANTENNA_PORT)
 print(cmd)
-run_py_process(cmd)
+run_process(cmd)
 
 cmd = 'python3 /home/root/l1t-lite/vspa-if-ls'+str(DCS) + '.py cfg patt tx 0 0 0 1 0 1.0 ' + str(ANTENNA_PORT)
 print(cmd)
-run_py_process(cmd)
+run_process(cmd)
 
 cmd = 'python3 /home/root/l1t-lite/vspa-if-ls'+str(DCS) + '.py init tx ' + str(ANTENNA_PORT) + ' 4294967295 0'
 print(cmd)
-run_py_process(cmd)
+run_process(cmd)
 
 cmd = 'python3 /home/root/l1t-lite/vspa-if-ls'+str(DCS) + '.py start tx ' + str(ANTENNA_PORT)
 print(cmd)
-run_py_process(cmd)
+run_process(cmd)
 
 cmd = 'python3 /home/root/l1t-lite/vspa-if-ls'+str(DCS) + '.py start tx ' + str(ANTENNA_PORT)
 print(cmd)
-run_py_process(cmd)
+run_process(cmd)
 
 
