@@ -1,3 +1,4 @@
+import time
 import numpy as np
 from math import pi as pi
 from scipy import signal as sig
@@ -71,7 +72,7 @@ if plot:
 
 #inputfile = 'rx_qpsk_30mbd_seq_0213.bin'
 #inputfile = 'rx_sin_20MHz.bin'
-inputfile = 'rx_qpsk_30mbd_seq_0123-16128-112896-.bin'
+inputfile = 'rx_0_1_1_1_0_2-15360-122880-.bin'
 #inputfile= 'rx_qpsk_30mbd_HG.bin'
 
 iq = np.fromfile(inputfile, dtype = np.dtype('<i2'))
@@ -86,6 +87,9 @@ print(len(q))
 
 i = i - np.mean(i)
 q = q - np.mean(q)
+
+amp_max = max(max(i), max(q))
+
 maxi = np.max(i)
 maxq = np.max(q)
 i = i / maxi
@@ -94,13 +98,11 @@ q = q / maxq
 print("Samples " + str(len(i)))
 
 
-
-
 [i_filt, W, h] = LPF(i, fc, Fs)
 [q_filt, W, h] = LPF(q, fc, Fs)
 
-plt.plot(i_filt, '.-')
-plt.plot(q_filt, '.-')
+plt.plot(i, '.-')
+plt.plot(q, '.-')
 plt.grid()
 plt.show()
 
@@ -108,12 +110,17 @@ samples_i = sig.resample_poly(i_filt, 4, 1)
 samples_q = sig.resample_poly(q_filt, 4, 1)
 
 
-si = samples_i[111::32]
-sq = samples_q[111::32]
+si = samples_i[163::32]
+sq = samples_q[163::32]
+
+for o in range(32):
+    plt.plot(samples_i[o+150::32], samples_q[o+150::32], '.')
 
 
-plt.plot(si, sq, '.')
 plt.show()
+
+#plt.plot(si, sq, '.')
+#plt.show()
 
 max_i = np.max(si)
 max_q = np.max(sq)

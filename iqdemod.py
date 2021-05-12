@@ -43,7 +43,7 @@ CarrierTxPhaseErr = 0.0
 CarrierTxFreq = 1000000
 
 CarrierRxPhaseErr = 0.0
-CarrierRxFreq = 1000010
+CarrierRxFreq = 1000000
 
 f = 1000
 
@@ -52,21 +52,27 @@ t = np.linspace(0, 0.1, 2000000)
 i_off = 0
 q_off = 0
 iq_ph_err = 0
-amp_err = 0
-iq_freq_err = 1.1
+amp_err = 1
+iq_freq_err = 1
 
-it = np.cos(2*np.pi*f*t) + i_off
+it = np.sin(2*np.pi*f*t) + i_off
 qt = amp_err*np.sin(2*np.pi*f*iq_freq_err*t + iq_ph_err) + q_off
 
 s = np.multiply(it, np.cos(2*np.pi*CarrierTxFreq*t)) + np.multiply(qt, np.sin(2*np.pi*CarrierTxFreq*t + CarrierTxPhaseErr))
 
 
-ir = np.multiply(s, np.cos(2*np.pi*CarrierRxFreq*t))
-qr = np.multiply(s, np.sin(2*np.pi*CarrierRxFreq*t+CarrierRxPhaseErr))
+ir = np.multiply(s, np.cos(2*np.pi*CarrierRxFreq*t+np.pi/8))
+qr = np.multiply(s, np.sin(2*np.pi*CarrierRxFreq*t+CarrierRxPhaseErr+np.pi/8))
 
 [irf, W, h]  = LPF(ir, 10000, 2000000)
+[qrf, W, h]  = LPF(qr, 10000, 2000000)
 
 plt.plot(it, '.-')
 plt.plot(irf, '.-')
-#plt.plot(qr, '.-')
+
+plt.show()
+
+plt.plot(qt, '.-')
+plt.plot(qrf, '.-')
+
 plt.show()
