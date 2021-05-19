@@ -43,7 +43,9 @@ Amp = 30000
 sps = F_sample // F_baud # samples per symbol
 
 syms_qpsk = np.array([ 1. + 1.j, -1. + 1.j, -1. - 1.j, 1. - 1.j ])
-#bits = np.random.randint(0, 4, num_symbols) # Our data to be transmitted, 1's and 0's
+bits = np.random.randint(0, 4, num_symbols) # Our data to be transmitted, 1's and 0's
+
+"""
 bits = np.zeros(num_symbols, dtype=int)
 
 seq = np.zeros(4, dtype=int)
@@ -52,6 +54,7 @@ for i in range(4):
 
 for k  in range(num_symbols):
     bits[k] = seq[k % 4]
+"""
 
 I = np.array([])
 Q = np.array([])
@@ -76,7 +79,9 @@ h = np.sinc(t/Ts) * np.cos(np.pi*beta*t/Ts) / (1 - (2*beta*t/Ts)**2)
 
 
 # Filter our signal, in order to apply the pulse shaping
+print("I len " + str(len(I)))
 I_shaped = np.convolve(I, h)
+print("I shaped len " + str(len(I_shaped)))
 
 
 """
@@ -101,6 +106,7 @@ for i in range(num_symbols):
 
 
 i = I_shaped[0:N_pts]
+print("I len " + str(len(i)))
 q = Q_shaped[0:N_pts]
 amp_max = max(max(i), max(q))
 
