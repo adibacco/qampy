@@ -14,7 +14,9 @@ ANTENNA_PORT_TX=int(sys.argv[3])
 def run_process(args):
     os.system(args)
 
+WAVE_LEN = os.stat(WAVEFORM_TX).st_size
 
+print('Wave len ' + str(WAVE_LEN))
 
 print('DDR target ' + hex(TARGET_ADDR_DDR))
 print('VSPA Buffer ' + hex(VSPA_BUFFER_ADDR))
@@ -29,7 +31,7 @@ run_process(b2m)
 toks = sys.argv[1].split('-')
 
 
-cmd = 'python3 /home/root/l1t-lite/vspa-if-ls'+str(DCS_TX) + '.py cfg buff tx 0 ' + hex(VSPA_BUFFER_ADDR + ANTENNA_PORT_TX*OFFSET_TX_CH + OFFSET_TX_SECTION) + ' ' + str(toks[1]) + ' ' + str(toks[2]) + ' ' + str(ANTENNA_PORT_TX)
+cmd = 'python3 /home/root/l1t-lite/vspa-if-ls'+str(DCS_TX) + '.py cfg buff tx 0 ' + hex(VSPA_BUFFER_ADDR + ANTENNA_PORT_TX*OFFSET_TX_CH + OFFSET_TX_SECTION) + ' ' + str(toks[1]) + ' ' + str(WAVE_LEN) + ' ' + str(ANTENNA_PORT_TX)
 print(cmd)
 run_process(cmd)
 

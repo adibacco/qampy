@@ -1,7 +1,7 @@
 import sys, os, subprocess
 
 
-# <waveform_tx> <dcs_tx> <antenna_port_tx> <waveform_rx> <waveform_rx> <dcs_rx> <antenna_port_rx>
+# <waveform_tx> <dcs_tx> <antenna_port_tx> <waveform_rx> <dcs_rx> <antenna_port_rx>
 
 WAVEFORM_TX=sys.argv[1]
 TARGET_ADDR_DDR=0x2380000000

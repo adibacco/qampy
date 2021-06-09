@@ -13,7 +13,11 @@ ANTENNA_PORT_RX=int(sys.argv[3])
 
 def run_process(args):
     os.system(args)
-
+ 
+ 
+toks = sys.argv[1].split('-')
+DMA=toks[1]
+TRANSFER=toks[2]
 
 
 
@@ -21,6 +25,7 @@ print('DDR target ' + hex(TARGET_ADDR_DDR))
 print('VSPA Buffer ' + hex(VSPA_BUFFER_ADDR))
 print('Antenna port ' + str(ANTENNA_PORT_RX))
 print('DCS ' + str(DCS_RX))
+print('DMA ' + str(DMA))
 
 cmd = 'python3 /home/root/l1t-lite/vspa-if-ls'+str(DCS_RX) + '.py cfg buff rx 0 ' + hex(VSPA_BUFFER_ADDR + ANTENNA_PORT_RX*OFFSET_RX_CH + OFFSET_RX_SECTION) + ' ' + str(DMA) + ' ' + str(TRANSFER) + ' ' + str(ANTENNA_PORT_RX)
 print(cmd)
