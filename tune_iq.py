@@ -43,7 +43,7 @@ qo = q*amp_q + off_q
 
 print('Output signal')
 max_i = np.max(io)
-max_q = np.max(qq)
+max_q = np.max(qo)
 mean_i = np.mean(io)
 mean_q = np.mean(qo)
 print('max I ' + str(max_i) + ' mean I ' + str(mean_i))
@@ -51,7 +51,7 @@ print('max Q ' + str(max_q) + ' mean Q ' + str(mean_q))
 
 iq_o = np.vstack((io, qo)).ravel('F')
 dt = np.dtype('<i2')  
-iq_o.astype(dtype=dt).tofile('mod-'+inputfile)
+iq_o.astype(dtype=dt).tofile('mod_'+inputfile)
 
 
 
