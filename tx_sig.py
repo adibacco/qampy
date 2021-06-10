@@ -24,14 +24,28 @@ print('Antenna port ' + str(ANTENNA_PORT_TX))
 print('DCS ' + str(DCS_TX))
 
 
+toks = sys.argv[1].split('-')
+DMA_SIZE = toks[1]
+
+if (WAVE_LEN < 1024):
+    print('NOT ENOUGH SAMPLES')
+    quit()
+
+for dma in range(16384, 1, -1):
+    if (WAVE_LEN % dma == 0):
+        DMA_SIZE = dma
+        break
+
+if (dma < 64): 
+    print('DMA SIZE WRONG ' + str(DMA_SIZE))
+    quit() 
+
 b2m = '/home/root/l1t-lite/bin2mem -f ' + WAVEFORM_TX + ' -a ' + hex(TARGET_ADDR_DDR + ANTENNA_PORT_TX*OFFSET_TX_CH + OFFSET_TX_SECTION) + ' -c 4'
 print(b2m)
 run_process(b2m)
 
-toks = sys.argv[1].split('-')
 
-
-cmd = 'python3 /home/root/l1t-lite/vspa-if-ls'+str(DCS_TX) + '.py cfg buff tx 0 ' + hex(VSPA_BUFFER_ADDR + ANTENNA_PORT_TX*OFFSET_TX_CH + OFFSET_TX_SECTION) + ' ' + str(toks[1]) + ' ' + str(WAVE_LEN) + ' ' + str(ANTENNA_PORT_TX)
+cmd = 'python3 /home/root/l1t-lite/vspa-if-ls'+str(DCS_TX) + '.py cfg buff tx 0 ' + hex(VSPA_BUFFER_ADDR + ANTENNA_PORT_TX*OFFSET_TX_CH + OFFSET_TX_SECTION) + ' ' + str(DMA_SIZE) + ' ' + str(WAVE_LEN) + ' ' + str(ANTENNA_PORT_TX)
 print(cmd)
 run_process(cmd)
 
