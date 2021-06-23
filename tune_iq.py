@@ -1,11 +1,12 @@
 import sys
 import time
 import os
+from typing import IO
 import numpy as np
 from math import pi as pi
 from scipy import signal as sig
 
-MAX_SIG = 30000
+MAX_SIG = 30000.0
 
 inputfile = 'ssb_30k_50M_0806-16384-.bin'
 inputfile = sys.argv[1]
@@ -58,26 +59,33 @@ print('max Q ' + str(max_q) + ' min Q ' + str(min_q) + ' mean Q ' + str(mean_q))
 l = len(iq)
 
 
+if (save_file == 0):
+    exit()
+
 
 io = i*amp_i 
 qo = q*amp_q 
 
-
-
-
 io = io + off_i
 qo = qo + off_q
 
-max_io = np.max(io);
-min_io = np.min(io);
-max_qo = np.max(qo);
-min_qo = np.min(qo);
+max_io = np.max(io)
+min_io = np.min(io)
+max_qo = np.max(qo)
+min_qo = np.min(qo)
 
+aux0 = (max_io - MAX_SIG) if (max_io - MAX_SIG > 0) else 0
+aux1 = (max_qo - MAX_SIG) if (max_qo - MAX_SIG > 0) else 0
+aux2 = (-MAX_SIG -min_io) if (-MAX_SIG -min_io > 0) else 0
+aux3 = (-MAX_SIG -min_qo) if (-MAX_SIG -min_qo > 0) else 0
 
+overflow = np.max([aux0, aux1, aux2, aux3])
 
+print(str(aux0) + " " + str(aux1) + " " + str(aux2) + " " + str(aux3))
 
-if (save_file == 0):
-    exit()
+io = io * (MAX_SIG/(MAX_SIG+overflow))
+qo = qo * (MAX_SIG/(MAX_SIG+overflow))
+
 
 print('Output signal')
 max_i = np.max(io)
