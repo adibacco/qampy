@@ -24,8 +24,7 @@ print('Antenna port ' + str(ANTENNA_PORT_TX))
 print('DCS ' + str(DCS_TX))
 
 
-toks = sys.argv[1].split('-')
-DMA_SIZE = toks[1]
+DMA_SIZE = 16384
 
 if (WAVE_LEN < 1024):
     print('NOT ENOUGH SAMPLES')
@@ -39,6 +38,8 @@ for dma in range(16384, 1, -1):
 if (dma < 64): 
     print('DMA SIZE WRONG ' + str(DMA_SIZE))
     quit() 
+
+print('DMA SIZE ' + str(DMA_SIZE))
 
 b2m = '/home/root/l1t-lite/bin2mem -f ' + WAVEFORM_TX + ' -a ' + hex(TARGET_ADDR_DDR + ANTENNA_PORT_TX*OFFSET_TX_CH + OFFSET_TX_SECTION) + ' -c 4'
 print(b2m)
