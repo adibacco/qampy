@@ -30,24 +30,32 @@ q = iq[1::2]
 
 print('Input signal')
 max_i = np.max(i)
+min_i = np.min(i)
 max_q = np.max(q)
+min_q = np.min(q)
+
 mean_i = np.mean(i)
 mean_q = np.mean(q)
-print('max I ' + str(max_i) + ' mean I ' + str(mean_i))
-print('max Q ' + str(max_q) + ' mean Q ' + str(mean_q))
+print('max I ' + str(max_i) + ' min I ' + str(min_i) + ' mean I ' + str(mean_i))
+print('max Q ' + str(max_q) + ' min Q ' + str(min_q) + ' mean Q ' + str(mean_q))
 
 l = len(iq)
 
-io = i*amp_i + off_i
-qo = q*amp_q + off_q
+io = i*amp_i 
+qo = q*amp_q 
+io = io + off_i
+qo = qo + off_q
+
 
 print('Output signal')
 max_i = np.max(io)
+min_i = np.min(io)
 max_q = np.max(qo)
+min_q = np.min(qo)
 mean_i = np.mean(io)
 mean_q = np.mean(qo)
-print('max I ' + str(max_i) + ' mean I ' + str(mean_i))
-print('max Q ' + str(max_q) + ' mean Q ' + str(mean_q))
+print('max I ' + str(max_i) + ' min I ' + str(min_i) +  ' mean I ' + str(mean_i))
+print('max Q ' + str(max_q) + ' min Q ' + str(min_q) +  ' mean Q ' + str(mean_q))
 
 iq_o = np.vstack((io, qo)).ravel('F')
 dt = np.dtype('<i2')  
